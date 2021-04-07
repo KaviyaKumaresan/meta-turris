@@ -16,6 +16,9 @@ SRC_URI_append = " \
     file://turriswifiinitialized.path \
     file://checkturriswifisupport.path \
     file://wifi-initialized.target \
+    file://ProcessResetCheck.sh \
+    file://ProcessResetDetect.service \
+    file://ProcessResetDetect.path \
 "
 
 SRC_URI_remove_dunfell = "file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
@@ -60,7 +63,7 @@ do_install_append_class-target(){
     install -m 777 ${S}/systemd_units/scripts/utopiaInitCheck.sh ${D}/usr/ccsp/utopiaInitCheck.sh
     install -m 777 ${S}/systemd_units/scripts/ccspPAMCPCheck.sh ${D}/usr/ccsp/ccspPAMCPCheck.sh
 
-    install -m 777 ${S}/systemd_units/scripts/ProcessResetCheck.sh ${D}/usr/ccsp/ProcessResetCheck.sh
+    install -m 777 ${WORKDIR}/ProcessResetCheck.sh ${D}/usr/ccsp/ProcessResetCheck.sh
     sed -i -e "s/source \/rdklogger\/logfiles.sh;syncLogs_nvram2/#source \/rdklogger\/logfiles.sh;syncLogs_nvram2/g" ${D}/usr/ccsp/ProcessResetCheck.sh
     # install systemd services
     install -d ${D}${systemd_unitdir}/system
@@ -88,8 +91,8 @@ do_install_append_class-target(){
 
     install -D -m 0644 ${WORKDIR}/wifi-initialized.target ${D}${systemd_unitdir}/system/wifi-initialized.target
 
-    install -D -m 0644 ${S}/systemd_units/ProcessResetDetect.service ${D}${systemd_unitdir}/system/ProcessResetDetect.service
-    install -D -m 0644 ${S}/systemd_units/ProcessResetDetect.path ${D}${systemd_unitdir}/system/ProcessResetDetect.path
+    install -D -m 0644 ${WORKDIR}/ProcessResetDetect.service ${D}${systemd_unitdir}/system/ProcessResetDetect.service
+    install -D -m 0644 ${WORKDIR}/ProcessResetDetect.path ${D}${systemd_unitdir}/system/ProcessResetDetect.path
     install -D -m 0644 ${S}/systemd_units/logagent.service ${D}${systemd_unitdir}/system/logagent.service
 
     # Install wrapper for breakpad (disabled to support External Source build)
